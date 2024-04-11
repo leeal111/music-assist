@@ -24,10 +24,9 @@ pip install -r requirements.txt
 
 ## 使用示例
 
-具体使用方法查看对应文件上方注释
+需要修改`music.py`中的三个程序输入变量
 ```bash
-python -m music_base.py
-python -m cloudmusic_playlist.py
+python music.py
 ```
 ## 版权和许可
 

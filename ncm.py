@@ -1,22 +1,11 @@
 import base64
 import binascii
-import glob
 import json
-from os import listdir, makedirs
-from os.path import normpath, isdir, join, exists, splitext, basename
-import shutil
+from os.path import splitext, basename
 import struct
 from Crypto.Cipher import AES
 from mutagen.flac import Picture, FLAC
 from mutagen.id3 import ID3, APIC
-
-# 你的网易云音乐下载保存路径
-cloudmusic_musicbase_path = normpath(r"D:\CloudMusic")
-# 你想保存到的路径
-my_musicbase_path = normpath(r"D:\PortableDir\music\musicbase")
-
-##########################################################
-cloudmusic_vipmusic_dir = "VipSongsDownload"
 
 
 def check_jpeg_header(data):
@@ -129,43 +118,3 @@ def ncm2xxx(src, dst):
     f.close()
 
     set_album_art(image_data, dst + "." + meta_data["format"])
-
-
-def move_cloudmusic_musicbase():
-    print("")
-    makedirs(my_musicbase_path, exist_ok=True)
-    dirs = []
-    for file in listdir(cloudmusic_musicbase_path):
-        src_path = join(cloudmusic_musicbase_path, file)
-        dst_path = join(my_musicbase_path, file)
-        if exists(dst_path):
-            print(f"已存在 {file}")
-            continue
-        if isdir(src_path):
-            dirs.append(file)
-        else:
-            print(f"正在移动 {file}")
-            shutil.copy(src_path, dst_path)
-
-    if cloudmusic_vipmusic_dir in dirs:
-        vip_musicbase_path = join(cloudmusic_musicbase_path, cloudmusic_vipmusic_dir)
-        for file in listdir(vip_musicbase_path):
-            if not file.endswith("ncm"):
-                continue
-            file_without_ext = splitext(file)[0]
-            src_path = join(vip_musicbase_path, file)
-            dst_path = join(my_musicbase_path, file_without_ext)
-
-            if len(glob.glob(glob.escape(dst_path) + ".*")) > 0:
-                print(f"已存在 {file}")
-                continue
-            print(f"正在移动 {file}")
-            ncm2xxx(src_path, dst_path)
-
-
-if __name__ == "__main__":
-    move_cloudmusic_musicbase()
-    # ncm2xxx(
-    #     normpath(r"test\インタビュア - H△G.ncm"),
-    #     normpath(r"test\インタビュア - H△G"),
-    # )
