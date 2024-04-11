@@ -23,16 +23,16 @@ mode = 1
 
 # 你的某个歌单的歌曲数量，用以确定获取哪个歌单的数据
 # 如果有多个相同的歌单数量，取第一个
-playlist_length = 104
+playlist_length = 102
 
 # 指定的文件名称格式化字符串，用{0}代表歌曲名，{1}代表歌手名（已经处理了多个的情况），比如下面的例子代表
 # ギターと孤独と蒼い惑星 - 結束バンド，其中{0}代表ギターと孤独と蒼い惑星，而{1}代表結束バンド
-format_str = "{0} - {1}"
+format_str = "{1} - {0}"
 
 # 你的音乐数据库路径
-my_musicbase_path = normpath(r"music")
+my_musicbase_path = normpath(r"D:\PortableDir\music\musicbase")
 # 你想要将歌曲保存路径
-dst_path = normpath(r"test")
+dst_path = normpath(r"C:\Users\fumen\Desktop\music")
 
 ##########################################################
 cloudmusic_database_path = join(
@@ -109,7 +109,7 @@ def move_playlist_track_files(playlist_length, dst_path):
     if exists(dst_path):
         print(f"'{dst_path}' exists")
         return
-    makedirs(dst_path)
+    makedirs(dst_path, exist_ok=True)
 
     track_infos = get_playlist_track_files(playlist_length)
     my_music_files = listdir(my_musicbase_path)
@@ -119,10 +119,11 @@ def move_playlist_track_files(playlist_length, dst_path):
     for tf in track_infos:
         # 如果音乐数据库存在其他方式下载的文件，在此扩充判定...
         # 网易文件判定
-        if tf.cloudmusic_str(format_str) in my_music_files_without_ext:
-            indexs.append(my_music_files_without_ext.index(tf))
+        tf_str = tf.cloudmusic_str(format_str)
+        if tf_str in my_music_files_without_ext:
+            indexs.append(my_music_files_without_ext.index(tf_str))
         else:
-            not_founds.append(tf)
+            not_founds.append(tf_str)
     print(f"未找到:\n{'\n'.join(not_founds)}\n")
     for index in indexs:
         print(f"正在移动 {my_music_files[index]}")

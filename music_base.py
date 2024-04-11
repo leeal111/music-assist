@@ -11,9 +11,9 @@ from mutagen.flac import Picture, FLAC
 from mutagen.id3 import ID3, APIC
 
 # 你的网易云音乐下载保存路径
-cloudmusic_musicbase_path = normpath(r"C:\Users\fumen\PersonalDir\music")
+cloudmusic_musicbase_path = normpath(r"D:\CloudMusic")
 # 你想保存到的路径
-my_musicbase_path = normpath(r"music")
+my_musicbase_path = normpath(r"D:\PortableDir\music\musicbase")
 
 ##########################################################
 cloudmusic_vipmusic_dir = "VipSongsDownload"
@@ -132,6 +132,7 @@ def ncm2xxx(src, dst):
 
 
 def move_cloudmusic_musicbase():
+    print("")
     makedirs(my_musicbase_path, exist_ok=True)
     dirs = []
     for file in listdir(cloudmusic_musicbase_path):
