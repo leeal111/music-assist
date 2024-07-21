@@ -55,7 +55,7 @@ def ncm2xxx(src, dst):
 
     f = open(src, "rb")
     header = f.read(8)
-    assert binascii.b2a_hex(header) == b"4354454e4644414d"
+    assert binascii.b2a_hex(header) == b"4354454e4644414d", f"{src}"
 
     f.seek(2, 1)
     key_length = f.read(4)

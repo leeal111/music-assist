@@ -1,7 +1,7 @@
 from os import listdir, makedirs, walk
 import shutil
 from ncm import ncm2xxx
-from utils import print_error, print_info, pure_name, recursion_filepaths
+from utils import print_error, print_info, pure_name
 from os.path import splitext, basename, exists, join, isfile
 
 
@@ -53,7 +53,7 @@ class MusicBase:
             file_path = join(vip_path, file)
             name = pure_name(file_path)
             if isfile(file_path):
-                if name not in music_names:
+                if file.endswith("ncm") and name not in music_names:
                     ncm2xxx(file_path, join(move_path, name))
                     print_info(f"成功复制 {name}")
                 else:
