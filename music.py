@@ -8,6 +8,14 @@ from values import CLOUDMUSIC_DATABASE_PATH, TEMP_DATA_PATH
 
 
 def copy_music_by_names(track_names, musicbase_path, output_path):
+    """根据指定的歌曲列表名称，从指定的歌曲数据库中复制歌曲到指定的目标文件夹下
+
+    Args:
+        track_names (list[str]): 名称列表
+        musicbase_path (str): 歌曲数据库路径
+        output_path (str): 目标文件夹路径
+    """
+    print_info("尝试转移查询到的歌曲列表...")
     music_paths = recursion_filepaths(musicbase_path)
     music_names = [splitext(basename(x))[0] for x in music_paths]
     exist_music_names = [splitext(x)[0] for x in listdir(output_path)]
@@ -33,13 +41,13 @@ def copy_music_by_names(track_names, musicbase_path, output_path):
 
 
 if __name__ == "__main__":
-    cloudmusic_path = normpath(r"D:\CloudMusic")
-    output_path = normpath(r"D:\PortableDir\music")
-    playlist_count = 105
+    print_info("初始化中...")
+    cloudmusic_path = normpath(r"C:\CloudMusic")
+    output_path = normpath(r"C:\PortableDir\musicbase")
+    playlist_count = 18
 
     cloudmusic_db = CloudBase(CLOUDMUSIC_DATABASE_PATH)
-    makedirs(TEMP_DATA_PATH, exist_ok=True)
-    cloudmusic_db.extract_database_info(cloudmusic_db.save_table_info)
+    cloudmusic_db.save_table_info()
 
     if not exists(cloudmusic_path):
         print_error(f"cloudmusic_path: {cloudmusic_path} not exists!")
