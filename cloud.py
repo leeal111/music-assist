@@ -26,9 +26,21 @@ class CloudBase(SqliteDataBase):
             return None
         return splitext(basename(tmp[0][3]))[0]
 
+    def dbTrackNameByID(self, id):
+        """返回根据歌曲id在db表中查找到的歌曲名称"""
+        tmp = self.executeSQL(f'SELECT * FROM "dbTrack" WHERE id = "{id}"')
+        if len(tmp) != 1:
+            # print_info(f"in offlineTracksByID find '{len(tmp)}' result by id '{id}'")
+            return None
+        track_info = json.loads(tmp[0][1])
+        name_str = track_info["name"]
+        authors = track_info["artists"]
+        author_str = ",".join([x["name"] for x in authors][:3])
+        return f"{author_str} - {name_str}"
+
     def trackNamesByLength(self, given_playlist_length):
         """返回根据指定歌单列表长度查询到的歌单歌曲名称列表"""
-        print_info("尝试从歌单长度获取歌单歌曲名称列表...")
+        print_info("尝试从歌单长度获取歌单歌曲名称列表")
         ptd = self.playlistidTrackidsDict()
         _playlist_lengths = []
         for trackids in ptd.values():
@@ -36,7 +48,7 @@ class CloudBase(SqliteDataBase):
             if len(trackids) == given_playlist_length:
                 trackNames = []
                 for id in trackids:
-                    name = self.offlineTrackNameByID(id)
+                    name = self.dbTrackNameByID(id)
                     if name is None:
                         print_info(f"track_id: {id} 不存在或者重复存在")
                     else:
@@ -44,14 +56,16 @@ class CloudBase(SqliteDataBase):
 
                 if len(trackNames) != given_playlist_length:
                     print_info(
-                        f"歌曲名称列表仅查询到{len(trackNames)}，应查询到{given_playlist_length}"
+                        f"歌曲名称列表仅查询到{len(trackNames)}项，应查询到{given_playlist_length}项"
                     )
+                else:
+                    print_info(f"歌曲名称列表查询到{len(trackNames)}项")
                 return trackNames
         print_error(
             f"given_playlist_length: {given_playlist_length} 不在 playlist_lengths:{_playlist_lengths} 里面"
         )
 
-    def save_table_info(
+    def table_detailed_info(
         self,
     ):
         """遍历数据库的所有表，打印所有表的元素信息和相应的示例元素。对于存在特殊jsonstr的元素信息，还会生成json文件。"""
@@ -86,6 +100,6 @@ class CloudBase(SqliteDataBase):
 
 if __name__ == "__main__":
     cb = CloudBase(CLOUDMUSIC_DATABASE_PATH)
-    print(cb.tableFirstData("offlineTrack"))
-    cb.save_table_info()
+    # print(cb.tableFirstData("offlineTrack"))
+    cb.table_detailed_info()
     # print(cb.playlistid_trackids_dict())

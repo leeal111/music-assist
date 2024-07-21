@@ -43,7 +43,12 @@ def set_album_art(image_data, file_path):
 
 
 def ncm2xxx(src, dst):
+    """将ncm格式转换成正常的音频格式
 
+    Args:
+        src (str): 原始ncm路径
+        dst (str): 输出音频路径，不带后缀名
+    """
     core_key = binascii.a2b_hex("687A4852416D736F356B496E62617857")
     meta_key = binascii.a2b_hex("2331346C6A6B5F215C5D2630553C2728")
     unpad = lambda s: s[0 : -(s[-1] if type(s[-1]) == int else ord(s[-1]))]

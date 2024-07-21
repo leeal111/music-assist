@@ -1,9 +1,9 @@
 import json
 import logging
-from os import listdir, walk
-from os.path import join, isfile
+from os.path import join
 import sys
 from values import TEMP_DATA_PATH
+from os.path import splitext, basename, join
 
 # 配置日志记录器
 logging.basicConfig(
@@ -41,11 +41,5 @@ def save_string(string, file_dir):
         f.write(string)
 
 
-def recursion_filepaths(path):
-    file_list = []
-    for root, _, files in walk(path):
-        for file in files:
-            file_path = join(root, file)
-            if isfile(file_path):
-                file_list.append(file_path)
-    return file_list
+def pure_name(path):
+    return splitext(basename(path))[0]
